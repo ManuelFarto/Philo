@@ -9,7 +9,7 @@ OBJDIR	= objs
 SRC		= $(wildcard $(SRCDIR)/*.c)
 OBJ		= $(SRC:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
-RM		= rm -f
+RM		= rm -rf
 MKDIR	= mkdir -p
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
@@ -27,11 +27,11 @@ $(NAME): $(OBJ)
 	@echo " ███████▌█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄​▄▄▄▄▄▄▌ "
 	@echo " ▀(@)▀▀▀▀▀▀▀(@)(@)▀▀▀▀▀▀▀▀▀▀▀▀▀​▀▀▀▀(@) "
 	@echo ""
-	@echo "  ✅ Compilation finished successfully!🚛"
+	@echo "✅ Compilation finished successfully!🚛"
 	@echo "\033[0m"
 
 clean:
-	@$(RM) $(OBJS)
+	@$(RM) $(OBJDIR)
 	@echo "\033[1;32m"
 	@echo " ▌▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▌▐▄       "
 	@echo " ▌     -OTRAFAM beep beep █▌██▄▄     "
@@ -43,7 +43,7 @@ clean:
 
 fclean: clean
 	@$(RM) $(NAME)
-	@rm -rf $(OBJDIR)
+	@$(RM) $(OBJDIR)
 	@echo "\033[0;31mBinary removed.\033[0m"
 
 re: fclean all

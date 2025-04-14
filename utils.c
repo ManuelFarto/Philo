@@ -6,7 +6,7 @@
 /*   By: mafarto- <mafarto-@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:17:04 by mafarto-          #+#    #+#             */
-/*   Updated: 2025/04/08 21:06:12 by mafarto-         ###   ########.fr       */
+/*   Updated: 2025/04/14 14:37:11 by mafarto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,27 @@ void	cleanup(t_controller *controller, int num_philos)
 	free(controller->threads);
 	free(controller->shared);
 	free(controller);
+}
+
+int	ft_isdigit(int argc, char **str)
+{
+	int count;
+	int count1;
+
+	count1 = 1;
+	count = 0;
+	while (count1 < argc)
+	{
+		count = 0;
+		while (str[count1][count])
+		{
+			if (str[count1][count] < '0' || str[count1][count] > '9')
+			{
+				return (0);
+			}
+			count++;
+		}
+		count1++;
+	}
+	return (1);
 }

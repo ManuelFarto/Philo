@@ -104,7 +104,7 @@ t_controller	*init_controller(int num_philos)
 	return (controller);
 }
 
-int	main(int argc, char *argv[])
+int	main(int argc, char **argv)
 {
 	t_controller	*controller;
 	pthread_t		monitor_thread;
@@ -119,6 +119,8 @@ int	main(int argc, char *argv[])
 	else
 		num_of_eats = -1;
 	controller = init_controller(num_philos);
+	if (ft_isdigit(argc, argv) == 0)
+		return (printf("One or more invalid character\n"), 1);
 	if (!controller)
 		return (printf("Memory allocation error\n"), 1);
 	init_forks(controller->forks, num_philos);
