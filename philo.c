@@ -26,18 +26,11 @@ void	*philo_life(void *arg)
 			return (pthread_mutex_unlock(&philo->shared->stop_mutex), NULL);
 		pthread_mutex_unlock(&philo->shared->stop_mutex);
 		eat(philo);
-		if (philo->num_of_eats > 0)
-		{
-			philo->num_of_eats--;
-			if (philo->num_of_eats == 0)
-			{
-				time_for_lunch(philo);
-				break ;
-			}
-		}
+		philo->num_of_eats -= (philo->num_of_eats > 0);
+		if (philo->num_of_eats == 0)
+			return (time_for_lunch(philo), NULL);
 		sleep_think(philo);
 	}
-	return (NULL);
 }
 
 void	*monitor(void *arg)
@@ -50,15 +43,19 @@ void	*monitor(void *arg)
 	{
 		pthread_mutex_lock(&philos->shared->stop_mutex);
 		if (philos->shared->stop_simulation)
-		{
-			pthread_mutex_unlock(&philos->shared->stop_mutex);
-			break ;
-		}
+			return (pthread_mutex_unlock(&philos->shared->stop_mutex), NULL);
 		i = 0;
 		while (i < philos->shared->all_philo)
 		{
-			if (get_time_ms() - philos[i].last_meal > philos[i].time_die)
-				return (philo_die (philos, i), NULL);
+			pthread_mutex_lock(&philos[i].meal_mutex);
+			long time_since_meal = get_time_ms() - philos[i].last_meal;
+			if (time_since_meal > philos[i].time_die)
+			{
+				philo_die (philos, i);
+				pthread_mutex_unlock(&philos[i].meal_mutex);
+				return (NULL);
+			}
+			pthread_mutex_unlock(&philos[i].meal_mutex);
 			i++;
 		}
 		pthread_mutex_unlock(&philos->shared->stop_mutex);
@@ -111,18 +108,18 @@ int	main(int argc, char **argv)
 	int				num_philos;
 	int				num_of_eats;
 
-	if (validate_args(argc))
+	if (validate_args(argc, argv))
 		return (1);
+	if (ft_isdigit(argc, argv) == 0)
+		return (printf("Error: One or more invalid character\n"), 1);
 	num_philos = atoi(argv[1]);
 	if (argc == 6)
 		num_of_eats = atoi(argv[5]);
 	else
 		num_of_eats = -1;
 	controller = init_controller(num_philos);
-	if (ft_isdigit(argc, argv) == 0)
-		return (printf("One or more invalid character\n"), 1);
 	if (!controller)
-		return (printf("Memory allocation error\n"), 1);
+		return (printf("Error: Memory allocation error\n"), 1);
 	init_forks(controller->forks, num_philos);
 	init_philosophers(controller, argv, num_philos, num_of_eats);
 	start_threads(controller->philos, controller->threads, num_philos);

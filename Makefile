@@ -30,6 +30,17 @@ $(NAME): $(OBJ)
 	@echo "✅ Compilation finished successfully!🚛"
 	@echo "\033[0m"
 
+run_test: all
+		@rm -fr logs
+		@rm -fr exits
+		@rm -fr valgrind_reports
+		@chmod +x test/test_arguments.sh
+		@./test/test_arguments.sh 
+		@chmod +x test/test_concurrency.sh
+		@./test/test_concurrency.sh
+		@chmod +x test/test_resources.sh
+		@./test/test_resources.sh
+
 clean:
 	@$(RM) $(OBJDIR)
 	@echo "\033[1;32m"

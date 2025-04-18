@@ -6,7 +6,7 @@
 /*   By: mafarto- <mafarto-@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:14:47 by mafarto-          #+#    #+#             */
-/*   Updated: 2025/04/08 21:09:57 by mafarto-         ###   ########.fr       */
+/*   Updated: 2025/04/17 09:43:49 by mafarto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	init_philosophers(t_controller *controller, char **argv,
 		controller->philos[i].right_fork
 			= &controller->forks[(i + 1) % num_philos];
 		init_philo_data(&controller->philos[i], controller->shared, argv);
+		pthread_mutex_init(&controller->philos[i].meal_mutex, NULL);
 		i++;
 	}
 }

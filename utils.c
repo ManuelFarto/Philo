@@ -6,7 +6,7 @@
 /*   By: mafarto- <mafarto-@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:17:04 by mafarto-          #+#    #+#             */
-/*   Updated: 2025/04/14 14:37:11 by mafarto-         ###   ########.fr       */
+/*   Updated: 2025/04/17 09:48:09 by mafarto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,20 @@ void	*ft_memset(void *b, int c, size_t len)
 	return (b);
 }
 
-int	validate_args(int argc)
+int	validate_args(int argc, char **argv)
 {
-	if (argc < 5 || argc > 6)
+	if (argc <= 4 || argc > 6)
 	{
-		printf("./philo num_philos time_dietime_eat time_sleep\n");
+		printf("Error: ./philo num_philos time_die time_eat time_sleep\n");
+		return (1);
+	}
+	if(argv[1][0] == '0')
+		return (1);
+	if(argv[1][0] == '1' && !argv[1][1])
+	{
+		printf("%ld %d %s\n", get_time_ms()-get_time_ms(), 1, TAKEN_FORK);
+		usleep(atoi(argv[2]));
+		printf("%d %d %s\n", atoi(argv[2]), 1, DIED);
 		return (1);
 	}
 	return (0);
@@ -51,6 +60,7 @@ void	cleanup(t_controller *controller, int num_philos)
 	while (i < num_philos)
 	{
 		pthread_mutex_destroy(&controller->forks[i]);
+		pthread_mutex_destroy(&controller->philos[i].meal_mutex);
 		i++;
 	}
 	pthread_mutex_destroy(&controller->shared->stop_mutex);
@@ -69,7 +79,7 @@ int	ft_isdigit(int argc, char **str)
 
 	count1 = 1;
 	count = 0;
-	while (count1 < argc)
+	while (str[count1])
 	{
 		count = 0;
 		while (str[count1][count])
@@ -82,5 +92,7 @@ int	ft_isdigit(int argc, char **str)
 		}
 		count1++;
 	}
+	if (count1 != argc)
+		return(0);
 	return (1);
 }

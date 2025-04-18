@@ -6,7 +6,7 @@
 /*   By: mafarto- <mafarto-@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:10:49 by mafarto-          #+#    #+#             */
-/*   Updated: 2025/04/14 14:35:35 by mafarto-         ###   ########.fr       */
+/*   Updated: 2025/04/17 08:21:21 by mafarto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct s_philo
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	t_shared		*shared;
+	pthread_mutex_t	meal_mutex;
 }			t_philo;
 
 typedef struct s_controller
@@ -85,7 +86,7 @@ void			join_threads(pthread_t *threads, int num_philos);
 // Utils
 long			get_time_ms(void);
 void			*ft_memset(void *b, int c, size_t len);
-int				validate_args(int argc);
+int				validate_args(int argc, char **argv);
 void			cleanup(t_controller *controller, int num_philos);
 int				ft_isdigit(int argc, char **str);
 
