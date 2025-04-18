@@ -47,16 +47,21 @@ void	time_for_lunch(t_philo	*philo)
 
 void	print_status(t_philo *philo, const char *msg)
 {
+	pthread_mutex_lock(&philo->shared->stop_mutex);
 	pthread_mutex_lock(&philo->shared->print_mutex);
 	if (!philo->shared->stop_simulation)
 		printf("%ld %d %s\n", get_time_ms() - philo->start_time,
 			philo->philo_num, msg);
 	pthread_mutex_unlock(&philo->shared->print_mutex);
+	pthread_mutex_unlock(&philo->shared->stop_mutex);
 }
 
 void	philo_die(t_philo *philos, int i)
 {
-	print_status(&philos[i], DIED);
+	(void)i;
+	printf("%ld %d %s\n", get_time_ms() - philos->start_time,
+	philos->philo_num, DIED);
 	philos->shared->stop_simulation = 1;
 	pthread_mutex_unlock(&philos->shared->stop_mutex);
+	pthread_mutex_unlock(&philos[i].meal_mutex);
 }

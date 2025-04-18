@@ -50,16 +50,12 @@ void	*monitor(void *arg)
 			pthread_mutex_lock(&philos[i].meal_mutex);
 			long time_since_meal = get_time_ms() - philos[i].last_meal;
 			if (time_since_meal > philos[i].time_die)
-			{
-				philo_die (philos, i);
-				pthread_mutex_unlock(&philos[i].meal_mutex);
-				return (NULL);
-			}
+				return (philo_die (philos, i), NULL);
 			pthread_mutex_unlock(&philos[i].meal_mutex);
 			i++;
 		}
 		pthread_mutex_unlock(&philos->shared->stop_mutex);
-		usleep(100000);
+		usleep(10000);
 	}
 	return (NULL);
 }
