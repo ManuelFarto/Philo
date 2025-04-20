@@ -37,6 +37,7 @@ void	*monitor(void *arg)
 {
 	t_philo	*philos;
 	int		i;
+	long	time_since_meal;
 
 	philos = (t_philo *)arg;
 	while (1)
@@ -47,8 +48,8 @@ void	*monitor(void *arg)
 		i = 0;
 		while (i < philos->shared->all_philo)
 		{
-			pthread_mutex_lock(&philos[i].meal_mutex);
-			long time_since_meal = get_time_ms() - philos[i].last_meal;
+			pthread_mutex_lock (&philos[i].meal_mutex);
+			time_since_meal = get_time_ms() - philos[i].last_meal;
 			if (time_since_meal > philos[i].time_die)
 				return (philo_die (philos, i), NULL);
 			pthread_mutex_unlock(&philos[i].meal_mutex);
@@ -125,7 +126,6 @@ int	main(int argc, char **argv)
 	return (cleanup(controller, num_philos), 0);
 }
 /*
-gcc -pthread philo.c -o philo 
 ./philo 1 800 200 200
 ./philo 5 800 200 200
 ./philo 5 800 200 200 7 >o

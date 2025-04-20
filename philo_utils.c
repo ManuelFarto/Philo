@@ -6,7 +6,7 @@
 /*   By: mafarto- <mafarto-@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:20:47 by mafarto-          #+#    #+#             */
-/*   Updated: 2025/04/18 10:00:01 by mafarto-         ###   ########.fr       */
+/*   Updated: 2025/04/20 21:13:23 by mafarto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	philo_die(t_philo *philos, int i)
 {
 	(void)i;
 	printf("%ld %d %s\n", get_time_ms() - philos->start_time,
-	philos->philo_num, DIED);
+		philos->philo_num, DIED);
 	philos->shared->stop_simulation = 1;
 	pthread_mutex_unlock(&philos->shared->stop_mutex);
 	pthread_mutex_unlock(&philos[i].meal_mutex);

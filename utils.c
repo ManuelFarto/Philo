@@ -6,7 +6,7 @@
 /*   By: mafarto- <mafarto-@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:17:04 by mafarto-          #+#    #+#             */
-/*   Updated: 2025/04/17 09:48:09 by mafarto-         ###   ########.fr       */
+/*   Updated: 2025/04/20 20:43:22 by mafarto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,11 @@ int	validate_args(int argc, char **argv)
 		printf("Error: ./philo num_philos time_die time_eat time_sleep\n");
 		return (1);
 	}
-	if(argv[1][0] == '0')
+	if (argv[1][0] == '0')
 		return (1);
-	if(argv[1][0] == '1' && !argv[1][1])
+	if (argv[1][0] == '1' && !argv[1][1])
 	{
-		printf("%ld %d %s\n", get_time_ms()-get_time_ms(), 1, TAKEN_FORK);
+		printf("%ld %d %s\n", get_time_ms() - get_time_ms(), 1, TAKEN_FORK);
 		usleep(atoi(argv[2]));
 		printf("%d %d %s\n", atoi(argv[2]), 1, DIED);
 		return (1);
@@ -74,8 +74,8 @@ void	cleanup(t_controller *controller, int num_philos)
 
 int	ft_isdigit(int argc, char **str)
 {
-	int count;
-	int count1;
+	int	count;
+	int	count1;
 
 	count1 = 1;
 	count = 0;
@@ -93,6 +93,6 @@ int	ft_isdigit(int argc, char **str)
 		count1++;
 	}
 	if (count1 != argc)
-		return(0);
+		return (0);
 	return (1);
 }
