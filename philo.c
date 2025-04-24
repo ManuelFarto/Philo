@@ -82,7 +82,7 @@ t_controller	*init_controller(int num_philos)
 	if (!controller->shared)
 		return (free(controller), NULL);
 	ft_memset(controller->shared, 0, sizeof(t_shared));
-	controller->forks = malloc(sizeof(pthread_mutex_t) * num_philos);
+	controller->forks = malloc(sizeof(pthread_mutex_t) * (num_philos -1));
 	controller->philos = malloc(sizeof(t_philo) * num_philos);
 	controller->threads = malloc(sizeof(pthread_t) * num_philos);
 	if (!controller->forks || !controller->philos || !controller->threads)

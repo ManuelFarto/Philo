@@ -6,7 +6,7 @@
 /*   By: mafarto- <mafarto-@student.42urduliz.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 18:14:47 by mafarto-          #+#    #+#             */
-/*   Updated: 2025/04/17 09:43:49 by mafarto-         ###   ########.fr       */
+/*   Updated: 2025/04/24 08:56:28 by mafarto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	init_forks(pthread_mutex_t *forks, int num_philos)
 	int	i;
 
 	i = 0;
-	while (i < num_philos)
+	while (i < num_philos -1)
 	{
 		pthread_mutex_init(&forks[i], NULL);
 		i++;
@@ -58,7 +58,7 @@ void	start_threads(t_philo *philos, pthread_t *threads, int num_philos)
 	int	i;
 
 	i = 0;
-	while (i < num_philos)
+	while (i < num_philos -1)
 	{
 		pthread_create(&threads[i], NULL, philo_life, &philos[i]);
 		i++;
@@ -70,7 +70,7 @@ void	join_threads(pthread_t *threads, int num_philos)
 	int	i;
 
 	i = 0;
-	while (i < num_philos)
+	while (i < num_philos-1)
 	{
 		pthread_join(threads[i], NULL);
 		i++;
