@@ -15,8 +15,8 @@
 void	eat(t_philo *philo)
 {
 	pthread_mutex_lock(philo->left_fork);
-	print_status(philo, TAKEN_FORK);
 	pthread_mutex_lock(philo->right_fork);
+	print_status(philo, TAKEN_FORK);
 	print_status(philo, TAKEN_FORK);
 	print_status(philo, EATING);
 	pthread_mutex_lock(&philo->shared->stop_mutex);
@@ -56,12 +56,12 @@ void	print_status(t_philo *philo, const char *msg)
 	pthread_mutex_unlock(&philo->shared->stop_mutex);
 }
 
-void	philo_die(t_philo *philos, int i)
+void	*philo_die(t_philo *philos, int i)
 {
-	(void)i;
-	printf("%ld %d %s\n", get_time_ms() - philos->start_time,
-		philos->philo_num, DIED);
+	printf("%ld %d %s\n", get_time_ms() - philos[i].start_time,
+		philos[i].philo_num, DIED);
 	philos->shared->stop_simulation = 1;
-	pthread_mutex_unlock(&philos->shared->stop_mutex);
+	pthread_mutex_unlock(&philos[i].shared->stop_mutex);
 	pthread_mutex_unlock(&philos[i].meal_mutex);
+	return (NULL);
 }

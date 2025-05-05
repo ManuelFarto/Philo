@@ -41,7 +41,7 @@ int	validate_args(int argc, char **argv)
 		return (1);
 	}
 	if (argv[1][0] == '0')
-		return (1);
+		return (2);
 	if (argv[1][0] == '1' && !argv[1][1])
 	{
 		printf("%ld %d %s\n", get_time_ms() - get_time_ms(), 1, TAKEN_FORK);
@@ -52,12 +52,14 @@ int	validate_args(int argc, char **argv)
 	return (0);
 }
 
-void	cleanup(t_controller *controller, int num_philos)
+void	cleanup(t_controller *controller, int num_philos,
+			pthread_t monitor_thread)
 {
 	int	i;
 
 	i = 0;
-	while (i < num_philos)
+	pthread_join(monitor_thread, NULL);
+	while (i < num_philos - 1)
 	{
 		pthread_mutex_destroy(&controller->forks[i]);
 		pthread_mutex_destroy(&controller->philos[i].meal_mutex);
@@ -86,6 +88,7 @@ int	ft_isdigit(int argc, char **str)
 		{
 			if (str[count1][count] < '0' || str[count1][count] > '9')
 			{
+				printf("Error: One or more invalid character\n");
 				return (0);
 			}
 			count++;

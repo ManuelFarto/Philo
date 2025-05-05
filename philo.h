@@ -73,7 +73,7 @@ void			eat(t_philo *philo);
 void			sleep_think(t_philo *philo);
 void			time_for_lunch(t_philo *philo);
 void			print_status(t_philo *philo, const char *msg);
-void			philo_die(t_philo *philos, int i);
+void			*philo_die(t_philo *philos, int i);
 
 // Init and clean
 void			init_forks(pthread_mutex_t *forks, int num_philos);
@@ -87,7 +87,10 @@ void			join_threads(pthread_t *threads, int num_philos);
 long			get_time_ms(void);
 void			*ft_memset(void *b, int c, size_t len);
 int				validate_args(int argc, char **argv);
-void			cleanup(t_controller *controller, int num_philos);
+void			cleanup(t_controller *controller, int num_philos,
+					pthread_t monitor_thread);
 int				ft_isdigit(int argc, char **str);
+
+int				finis_lunch(t_philo *philo);
 
 #endif

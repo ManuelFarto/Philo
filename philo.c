@@ -42,20 +42,20 @@ void	*monitor(void *arg)
 	philos = (t_philo *)arg;
 	while (1)
 	{
-		pthread_mutex_lock(&philos->shared->stop_mutex);
-		if (philos->shared->stop_simulation)
-			return (pthread_mutex_unlock(&philos->shared->stop_mutex), NULL);
 		i = 0;
+		pthread_mutex_lock(&philos[i].shared->stop_mutex);
+		if (philos->shared->stop_simulation)
+			return (pthread_mutex_unlock(&philos[i].shared->stop_mutex), NULL);
 		while (i < philos->shared->all_philo)
 		{
 			pthread_mutex_lock (&philos[i].meal_mutex);
 			time_since_meal = get_time_ms() - philos[i].last_meal;
 			if (time_since_meal > philos[i].time_die)
-				return (philo_die (philos, i), NULL);
+				return (philo_die (philos, i));
 			pthread_mutex_unlock(&philos[i].meal_mutex);
 			i++;
 		}
-		pthread_mutex_unlock(&philos->shared->stop_mutex);
+		pthread_mutex_unlock(&philos[i - 1].shared->stop_mutex);
 		usleep(10000);
 	}
 	return (NULL);
@@ -82,9 +82,10 @@ t_controller	*init_controller(int num_philos)
 	if (!controller->shared)
 		return (free(controller), NULL);
 	ft_memset(controller->shared, 0, sizeof(t_shared));
-	controller->forks = malloc(sizeof(pthread_mutex_t) * (num_philos -1));
-	controller->philos = malloc(sizeof(t_philo) * num_philos);
-	controller->threads = malloc(sizeof(pthread_t) * num_philos);
+	controller->forks = (pthread_mutex_t *)
+		malloc(sizeof(pthread_mutex_t) * (num_philos));
+	controller->philos = (t_philo *)malloc(sizeof(t_philo) * (num_philos));
+	controller->threads = (pthread_t *)malloc(sizeof(pthread_t) * (num_philos));
 	if (!controller->forks || !controller->philos || !controller->threads)
 	{
 		exit_clean(&controller);
@@ -105,26 +106,28 @@ int	main(int argc, char **argv)
 	int				num_philos;
 	int				num_of_eats;
 
-	if (validate_args(argc, argv))
+	if (validate_args(argc, argv) >= 1 || !ft_isdigit(argc, argv))
 		return (1);
-	if (ft_isdigit(argc, argv) == 0)
-		return (printf("Error: One or more invalid character\n"), 1);
-	num_philos = atoi(argv[1]);
-	if (argc == 6)
-		num_of_eats = atoi(argv[5]);
-	else
-		num_of_eats = -1;
-	controller = init_controller(num_philos);
-	if (!controller)
-		return (printf("Error: Memory allocation error\n"), 1);
-	init_forks(controller->forks, num_philos);
-	init_philosophers(controller, argv, num_philos, num_of_eats);
-	start_threads(controller->philos, controller->threads, num_philos);
-	pthread_create(&monitor_thread, NULL, monitor, controller->philos);
-	join_threads(controller->threads, num_philos);
-	pthread_join(monitor_thread, NULL);
-	return (cleanup(controller, num_philos), 0);
+	else if (atoi(argv[1]) > 1)
+	{
+		num_philos = atoi(argv[1]);
+		if (argc == 6)
+			num_of_eats = atoi(argv[5]);
+		else
+			num_of_eats = -1;
+		controller = init_controller(num_philos);
+		if (!controller)
+			return (printf("Error: Memory allocation error\n"), 1);
+		init_forks(controller->forks, num_philos);
+		init_philosophers(controller, argv, num_philos, num_of_eats);
+		start_threads(controller->philos, controller->threads, num_philos);
+		pthread_create(&monitor_thread, NULL, monitor, controller->philos);
+		join_threads(controller->threads, num_philos);
+		cleanup(controller, num_philos, monitor_thread);
+	}
+	return (0);
 }
+
 /*
 ./philo 1 800 200 200
 ./philo 5 800 200 200
